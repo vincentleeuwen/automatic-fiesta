@@ -5,7 +5,7 @@ export const toggleTodo = todo => {
   // return todo;
   
   // RIGHT:
-  const newTodo = Object.assign({}, todo);
-  newTodo.completed = !todo.completed;
-  return newTodo; 
+  return Object.assign({}, todo, {
+    completed: !todo.completed
+  });
 }
