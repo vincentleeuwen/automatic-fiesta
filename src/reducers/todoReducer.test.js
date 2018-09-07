@@ -1,10 +1,10 @@
 import deepFreeze from 'deep-freeze';
 import expect from 'expect';
-import { addTodoReducer, initialState } from './todoReducer';
+import { addTodoReducer } from './todoReducer';
 
 describe('Todo reducer test', () => {
   it('Should correctly add todos', () => {
-    const stateBefore = initialState;
+    const stateBefore = [];
     const todo = {
       id: 0,
       text: 'First todo'
@@ -21,8 +21,8 @@ describe('Todo reducer test', () => {
       }
     ]
 
-    // deepFreeze(stateBefore);
-    // deepFreeze(action);
+    deepFreeze(stateBefore);
+    deepFreeze(action);
 
     expect(addTodoReducer(stateBefore, action)).toEqual(stateAfter);
   });
