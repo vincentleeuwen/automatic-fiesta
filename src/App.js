@@ -1,31 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import './App.css';
+import Counter from './components/Counter';
 
 class App extends Component {
-  increaseCounter = () => {
-    this.props.dispatch({ type: 'INCREMENT' });
-  }
-  decreaseCounter = () => {
-    this.props.dispatch({ type: 'DECREMENT' });
-  }
-
   render() {
-    const { counter } = this.props;
+    const { counter, dispatch } = this.props;
     return (
       <div className="App">
-        <h1>{counter.counter}</h1>
-        <button
-          onClick={this.increaseCounter}
-        >
-          Increase
-        </button>
-        <button
-          onClick={this.decreaseCounter}
-        >
-          Decrease
-        </button>
+        <Counter
+          counter={counter.counter}
+          onIncrement={() => dispatch({ type: 'INCREMENT' })}
+          onDecrement={() => dispatch({ type: 'DECREMENT' })}
+        />
       </div>
     );
   }
