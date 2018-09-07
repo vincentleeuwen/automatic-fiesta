@@ -1,23 +1,47 @@
 import deepFreeze from 'deep-freeze';
 import expect from 'expect';
-import { toggleTodo } from './todoReducer';
+import { addTodoReducer, initialState } from './todoReducer';
 
 describe('Todo reducer test', () => {
-  it('Should toggle a todo in a pure way', () => {
-    const todoBefore = {
+  it('Should correctly add todos', () => {
+    const stateBefore = initialState;
+    const todo = {
       id: 0,
-      text: 'Learn Redux',
-      completed: false
+      text: 'First todo'
     }
-    const todoAfter = {
-      id: 0,
-      text: 'Learn Redux',
-      completed: true
+    const action = {
+      type: 'ADD_TODO',
+      todo
     }
+    const stateAfter = [
+      {
+        id: 0,
+        text: 'First todo',
+        completed: false
+      }
+    ]
 
-    deepFreeze(todoBefore);
+    // deepFreeze(stateBefore);
+    // deepFreeze(action);
 
-    expect(toggleTodo(todoBefore)).toEqual(todoAfter);
-
+    expect(addTodoReducer(stateBefore, action)).toEqual(stateAfter);
   });
+
+  // it('Should toggle a todo in a pure way', () => {
+  //   const todoBefore = {
+  //     id: 0,
+  //     text: 'Learn Redux',
+  //     completed: false
+  //   }
+  //   const todoAfter = {
+  //     id: 0,
+  //     text: 'Learn Redux',
+  //     completed: true
+  //   }
+
+  //   deepFreeze(todoBefore);
+
+  //   expect(toggleTodo(todoBefore)).toEqual(todoAfter);
+
+  // });
 });
