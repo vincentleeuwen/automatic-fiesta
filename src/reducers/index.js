@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { counter } from './counterReducer';
+import { todos, visibilityFilter } from './todoReducer';
 
 const rootReducer = combineReducers({
-  counter
+  todos,
+  visibilityFilter
 });
 
 export default rootReducer;
