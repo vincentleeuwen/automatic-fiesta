@@ -2,7 +2,7 @@ import initialState from './initialState';
 import * as actionTypes from '../actions/actionTypes';
 
 const todoReducer = (state, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case actionTypes.ADD_TODO:
       return Object.assign({}, action.todo, { completed: false });
     case actionTypes.TOGGLE_TODO:
@@ -13,10 +13,19 @@ const todoReducer = (state, action) => {
       }
     default:
       return state;
+  } 
+}
+
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch (action.type) {
+    case actionTypes.SET_VISIBILITY_FILTER:
+      return action.filter;
+    default:
+      return state;
   }
 }
 
-const todosReducer = (action, state = initialState.todos) => {
+const todosReducer = (state = initialState.todos, action) => {
   switch (action.type) {
     case actionTypes.ADD_TODO:
       return [
@@ -30,7 +39,20 @@ const todosReducer = (action, state = initialState.todos) => {
   }
 }
 
-export default todosReducer;
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todosReducer(
+      state.todos,
+      action
+    ),
+    visibilityFilter: visibilityFilter(
+      state.visibilityFilter,
+      action
+    )
+  }
+}
+
+export default todoApp;
 
 // export const toggleTodo = todo => {
 //   // WRONG:
