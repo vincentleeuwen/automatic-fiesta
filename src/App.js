@@ -3,25 +3,63 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import * as actionTypes from './actions/actionTypes';
+import * as todoActions from './actions/todoActions';
 import './App.css';
 
-const FilterLink = ({ filter, children, dispatch, currentFilter }) => {
-  if (currentFilter === filter) return <span>{children}</span>;
+const Link = ({ active, onClick, children }) => {
+  if (active) return <span>{children}</span>;
   return (
     <a
       href="#"
-      onClick={e => {
-        e.preventDefault();
-        dispatch({
-          type: actionTypes.SET_VISIBILITY_FILTER,
-          filter
-        });
-      }}
+      onClick={onClick}
+      // onClick={e => {
+      //   e.preventDefault();
+      //   dispatch({
+      //     type: actionTypes.SET_VISIBILITY_FILTER,
+      //     filter
+      //   });
+      // }}
     >
       {children}
     </a>
   );
 }
+
+const mapFilterLinkStateToProps = (state, ownProps) => {
+  return {
+    visibilityFilter: state.visibilityFilter
+  }
+}
+
+const mapDispatchFilterLinkToProps = (dispatch, ownProps) => {
+  return {
+    onClick: () => {
+      dispatch({
+        type: actionTypes.SET_VISIBILITY_FILTER,
+        filter: ownProps.filter
+      });
+    }
+  }
+  // return {
+  //   setVisibilityFilter: todoActions.setVisibilityFilter
+  // }
+}
+
+const FilterLink = connect(mapFilterLinkStateToProps, mapDispatchFilterLinkToProps)(class FilterLink extends Component {
+  render() {
+    const { filter, visibilityFilter, children, onClick } = this.props;
+    return (
+      <Link
+        active={
+          filter === visibilityFilter
+        }
+        onClick={
+          () => onClick(filter)
+        }
+      >{children}</Link>
+    )
+  }
+});
 
 const getVisibleTodos = (filter, todos) => {
   switch (filter) {
@@ -66,26 +104,20 @@ const AddTodo = ({ onChange, addTodo, text }) => (
   </div>
 )
 
-const Footer = ({ visibilityFilter, dispatch }) => (
+const Footer = () => (
   <p>
     Show:
     {' '}
     <FilterLink 
       filter="SHOW_ALL"
-      dispatch={dispatch}
-      currentFilter={visibilityFilter}
     >All</FilterLink>
     {' '}
     <FilterLink
       filter="SHOW_ACTIVE"
-      dispatch={dispatch}
-      currentFilter={visibilityFilter}
     >Active</FilterLink>
     {' '}
     <FilterLink
       filter="SHOW_COMPLETED"
-      dispatch={dispatch}
-      currentFilter={visibilityFilter}
     >Completed</FilterLink>
   </p>
 )
@@ -132,7 +164,6 @@ class App extends Component {
   render() {
     const { todos, dispatch, visibilityFilter } = this.props;
     const { text } = this.state;
-    const visibleTodos = getVisibleTodos(visibilityFilter, todos);
     return (
       <div className="App">
         <AddTodo
@@ -140,8 +171,8 @@ class App extends Component {
           onChange={this.onChange}
           addTodo={this.addTodo}
         />
-        <TodoList todos={visibleTodos} onTodoClick={this.onTodoClick} />
-        <Footer {...this.props} />
+        <TodoList todos={todos} onTodoClick={this.onTodoClick} />
+        <Footer />
       </div>
     );
   }
@@ -154,7 +185,7 @@ App.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    todos: state.todos,
+    todos: getVisibleTodos(state.visibilityFilter, state.todos),
     visibilityFilter: state.visibilityFilter
   }
 }
